@@ -1,15 +1,20 @@
 #include "cactus/application.hpp"
 #include "cactus/http.hpp"
+#include "cactus/utils.hpp"
 #include "cactus/version.hpp"
 #include "cactus/webhook.hpp"
 
+#include <stdexcept>
+
 #include <argparse/argparse.hpp>
-
-
 
 void cactus::Application::http_server(const std::string &config_file,
                                       uint16_t port) const {
   spdlog::debug("load configuration from {}", config_file);
+  if (!cactus::config_file_permission(config_file)) {
+    throw std::invalid_argument(
+        "invalid config file permissions, must be 400 or 600");
+  }
   const toml::table config = toml::parse_file(config_file);
 
   httplib::Server server;

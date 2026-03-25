@@ -25,3 +25,40 @@ std::string cactus::hmac::sha256(const std::string &key,
 
   return encoded;
 }
+
+bool cactus::config_file_permission(const std::filesystem::path &file) {
+  const auto it = std::filesystem::status(file).permissions();
+  if ((it & std::filesystem::perms::owner_read) ==
+      std::filesystem::perms::none) {
+    return false;
+  }
+  if ((it & std::filesystem::perms::owner_exec) !=
+      std::filesystem::perms::none) {
+    return false;
+  }
+  if ((it & std::filesystem::perms::group_read) !=
+      std::filesystem::perms::none) {
+    return false;
+  }
+  if ((it & std::filesystem::perms::group_write) !=
+      std::filesystem::perms::none) {
+    return false;
+  }
+  if ((it & std::filesystem::perms::group_exec) !=
+      std::filesystem::perms::none) {
+    return false;
+  }
+  if ((it & std::filesystem::perms::others_read) !=
+      std::filesystem::perms::none) {
+    return false;
+  }
+  if ((it & std::filesystem::perms::others_write) !=
+      std::filesystem::perms::none) {
+    return false;
+  }
+  if ((it & std::filesystem::perms::others_exec) !=
+      std::filesystem::perms::none) {
+    return false;
+  }
+  return true;
+}
