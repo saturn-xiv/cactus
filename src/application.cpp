@@ -5,6 +5,8 @@
 
 #include <argparse/argparse.hpp>
 
+
+
 void cactus::Application::http_server(const std::string &config_file,
                                       uint16_t port) const {
   spdlog::debug("load configuration from {}", config_file);
@@ -47,10 +49,6 @@ void cactus::Application::http_server(const std::string &config_file,
         }
         res.status = httplib::StatusCode::InternalServerError_500;
       });
-  // server.set_error_handler([](const auto &req, auto &res) {
-  //   res.set_content("Unexpected error",
-  //   cactus::content_types::TEXT_PLAIN_UTF8);
-  // });
 
   spdlog::info("listen on http://0.0.0.0:{}", port);
   server.listen("0.0.0.0", port);
