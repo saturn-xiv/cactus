@@ -8,6 +8,12 @@
 
 #include <argparse/argparse.hpp>
 
+inline static std::string api_version() {
+  const std::string it =
+      fmt::format("{}({})", cactus::GIT_VERSION, cactus::BUILD_TIME);
+  return it;
+}
+
 void cactus::Application::http_server(const std::string &config_file,
                                       uint16_t port) const {
   spdlog::debug("load configuration from {}", config_file);
@@ -36,6 +42,11 @@ void cactus::Application::http_server(const std::string &config_file,
     }
     res.set_content(body.dump(), cactus::content_types::APPLICATION_JSON_UTF8);
   });
+  server.Get("/version",
+             [](const httplib::Request &req, httplib::Response &res) {
+               const auto it = api_version();
+               res.set_content(it, cactus::content_types::TEXT_PLAIN_UTF8);
+             });
 
   server.set_logger(
       [](const httplib::Request &req, const httplib::Response &res) {
@@ -60,8 +71,7 @@ void cactus::Application::http_server(const std::string &config_file,
 }
 
 int cactus::Application::launch(int argc, char **argv) const {
-  const std::string version =
-      fmt::format("{}({})", cactus::GIT_VERSION, cactus::BUILD_TIME);
+  const std::string version = api_version();
   argparse::ArgumentParser program(cactus::PROJECT_NAME, version,
                                    argparse::default_arguments::help);
 
