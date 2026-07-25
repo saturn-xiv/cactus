@@ -1,0 +1,6 @@
+[gogs]
+
+[gogs.www-change-me-org]
+# openssl rand -base64 32
+secret = "90o7k92pRUzl/Or5cKL+GA7KovziVxKw5DLo6/x1JAs="
+shell = "./www.change-me.org.sh"

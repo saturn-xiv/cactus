@@ -2,6 +2,12 @@
 
 ## Usage
 
+    ```bash
+    git clone https://github.com/saturn-xiv/cactus.git $HOME/workspace/cactus
+    cd $HOME/workspace/cactus/
+    ./build.sh
+    ```
+
 ## Documents
 
 - [Github webhooks](https://docs.github.com/en/webhooks/about-webhooks)
