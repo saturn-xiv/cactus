@@ -30,7 +30,7 @@ void cactus::webhook::gogs::Handler::execute(const std::string &id,
     }
   }
 
-  const std::string uid = "gogs." + id + "." + delivery + ".json";
+  const std::string uid = "gogs." + id + "." + delivery;
   {
     std::ofstream out(uid + ".json");
     out << req.body;
