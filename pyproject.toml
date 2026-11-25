@@ -1,0 +1,41 @@
+[project]
+name = "cactus"
+authors = [{ name = "Jeremy Zheng", email = "jitang.zheng@gmail.com" }]
+description = "Webhooks server for Gogs & Github"
+readme = "README.md"
+requires-python = ">=3.14"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+dependencies = ["Flask", "pystache"]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/saturn-xiv/cactus"
+Issues = "https://github.com/saturn-xiv/cactus/issues"
+
+[project.scripts]
+cactus = "cactus:main"
+
+[build-system]
+requires = ["hatchling >= 1.26", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cactus"]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.version.raw-options]
+version_scheme = "no-guess-dev"
+
+[tool.pyright]
+include = ["src"]
+exclude = ["**/__pycache__", "tmp"]
+venvPath = "."
+venv = "tmp/python"
+pythonVersion = "3.14"
+typeCheckingMode = "basic"
