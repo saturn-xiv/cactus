@@ -27,8 +27,8 @@ def main():
         dest="command", required=True, help="Available sub-commands")
 
     parser_web = sub_parsers.add_parser("web", help="Launch a HTTP server")
-    parser_web.add_argument('-p', '--port', type=int,
-                            default=8080, help="port to listen")
+    parser_web.add_argument('-p', '--port', type=int, default=8080)
+    parser_web.add_argument('-w', '--workers', type=int, default=4)
 
     args = parser.parse_args()
     logging.basicConfig(
@@ -41,4 +41,4 @@ def main():
     with open(args.config, "rb") as file:
         config = tomllib.load(file)
     if args.command == "http":
-        launch_web_server(config, args.port)
+        launch_web_server(config, args.port, args.workers)

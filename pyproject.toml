@@ -9,7 +9,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 license = "MIT"
-dependencies = ["Flask", "pystache"]
+dependencies = ["Flask"]
 dynamic = ["version"]
 
 [project.urls]

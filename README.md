@@ -24,6 +24,8 @@ $ source $PWD/tmp/python/bin/activate
 > pip install build
 > python3 -m build
 
+> pip install gunicorn
+
 # Install for production
 > pip install dist/cactus-0.0.post1.dev1+g09d259a81.d20261125-py3-none-any.whl
 > cactus -h
@@ -33,3 +35,5 @@ $ source $PWD/tmp/python/bin/activate
 
 - [Github](https://docs.github.com/en/webhooks/about-webhooks)
 - [Gogs](https://gogs.io/advancing/webhooks)
+- [Nginx](https://gunicorn.org/deploy/#nginx-configuration)
+- [Gunicorn](https://gunicorn.org/quickstart/)
