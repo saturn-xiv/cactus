@@ -10,12 +10,12 @@
 #include <cryptopp/sha.h>
 
 // https://cryptopp.com/wiki/HMAC
-std::string cactus::hmac::sha256(const std::string &key,
-                                 const std::string &data) {
+std::string cactus::hmac::sha256(const std::string& key,
+                                 const std::string& data) {
   std::string mac, encoded;
 
   CryptoPP::HMAC<CryptoPP::SHA256> hmac(
-      reinterpret_cast<const CryptoPP::byte *>(key.c_str()), key.size());
+      reinterpret_cast<const CryptoPP::byte*>(key.c_str()), key.size());
   CryptoPP::StringSource ssb(
       data, true,
       new CryptoPP::HashFilter(hmac, new CryptoPP::StringSink(mac)));
@@ -26,7 +26,7 @@ std::string cactus::hmac::sha256(const std::string &key,
   return encoded;
 }
 
-bool cactus::config_file_permission(const std::filesystem::path &file) {
+bool cactus::config_file_permission(const std::filesystem::path& file) {
   const auto it = std::filesystem::status(file).permissions();
 
   return (it & std::filesystem::perms::owner_read) !=

@@ -8,6 +8,12 @@
     ./build.sh
     ```
 
+## Deployment
+
+    ```bash
+    cactus -d http -p 10002 -c config.toml
+    ```
+
 ## Documents
 
 - [Github webhooks](https://docs.github.com/en/webhooks/about-webhooks)

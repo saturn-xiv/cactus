@@ -2,11 +2,11 @@
 
 #include <spdlog/spdlog.h>
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   cactus::Application app;
   try {
     return app.launch(argc, argv);
-  } catch (const std::exception &ex) {
+  } catch (const std::exception& ex) {
     spdlog::error("{}", ex.what());
   } catch (...) {
     spdlog::error("an unknown exception occurred");

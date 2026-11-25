@@ -14,7 +14,7 @@ inline static std::string api_version() {
   return it;
 }
 
-void cactus::Application::http_server(const std::string &config_file,
+void cactus::Application::http_server(const std::string& config_file,
                                       uint16_t port) const {
   spdlog::debug("load configuration from {}", config_file);
   if (!cactus::config_file_permission(config_file)) {
@@ -26,8 +26,8 @@ void cactus::Application::http_server(const std::string &config_file,
   httplib::Server server;
 
   auto gogs = config["gogs"].as_table();
-  server.Post("/gogs/:id", [&](const httplib::Request &req,
-                               httplib::Response &res) {
+  server.Post("/gogs/:id", [&](const httplib::Request& req,
+                               httplib::Response& res) {
     {
       const auto client_id = req.path_params.at("id");
       spdlog::debug("call webhook gogs.{}", client_id);
@@ -43,20 +43,20 @@ void cactus::Application::http_server(const std::string &config_file,
     res.set_content(body.dump(), cactus::content_types::APPLICATION_JSON_UTF8);
   });
   server.Get("/version",
-             [](const httplib::Request &req, httplib::Response &res) {
+             [](const httplib::Request& req, httplib::Response& res) {
                const auto it = api_version();
                res.set_content(it, cactus::content_types::TEXT_PLAIN_UTF8);
              });
 
   server.set_logger(
-      [](const httplib::Request &req, const httplib::Response &res) {
+      [](const httplib::Request& req, const httplib::Response& res) {
         spdlog::info("{} {} {}", req.method, req.path, res.status);
       });
   server.set_exception_handler(
-      [](const auto &req, auto &res, std::exception_ptr ep) {
+      [](const auto& req, auto& res, std::exception_ptr ep) {
         try {
           std::rethrow_exception(ep);
-        } catch (std::exception &e) {
+        } catch (std::exception& e) {
           spdlog::error("{}", e.what());
           res.set_content(e.what(), cactus::content_types::TEXT_PLAIN_UTF8);
         } catch (...) {
@@ -70,7 +70,7 @@ void cactus::Application::http_server(const std::string &config_file,
   server.listen("0.0.0.0", port);
 }
 
-int cactus::Application::launch(int argc, char **argv) const {
+int cactus::Application::launch(int argc, char** argv) const {
   const std::string version = api_version();
   argparse::ArgumentParser program(cactus::PROJECT_NAME, version,
                                    argparse::default_arguments::help);
@@ -96,7 +96,7 @@ int cactus::Application::launch(int argc, char **argv) const {
 
   try {
     program.parse_args(argc, argv);
-  } catch (const std::exception &err) {
+  } catch (const std::exception& err) {
     spdlog::error("{}", err.what());
     return EXIT_FAILURE;
   }

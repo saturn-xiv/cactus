@@ -5,12 +5,11 @@
 #include <format>
 #include <stdexcept>
 
-#include <cppcodec/base64_url_unpadded.hpp>
 #include <spdlog/spdlog.h>
+#include <cppcodec/base64_url_unpadded.hpp>
 
-void cactus::webhook::gogs::Handler::execute(const std::string &id,
-                                             const httplib::Request &req) {
-
+void cactus::webhook::gogs::Handler::execute(const std::string& id,
+                                             const httplib::Request& req) {
   const auto delivery = req.get_header_value("X-Gogs-Delivery");
   const auto event = req.get_header_value("X-Gogs-Event");
   spdlog::info("{} {}", event, delivery);

@@ -15,21 +15,21 @@ struct Ok {
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Ok, created_at)
 
 class Handler {
-public:
-  virtual void execute(const std::string &id, const httplib::Request &req) = 0;
+ public:
+  virtual void execute(const std::string& id, const httplib::Request& req) = 0;
 };
 
 namespace gogs {
 class Handler : public cactus::webhook::Handler {
-public:
-  Handler(const toml::table &config) : _config(config) {}
-  void execute(const std::string &id, const httplib::Request &req) override;
+ public:
+  Handler(const toml::table& config) : _config(config) {}
+  void execute(const std::string& id, const httplib::Request& req) override;
 
-private:
+ private:
   toml::table _config;
 };
-} // namespace gogs
+}  // namespace gogs
 
-} // namespace webhook
+}  // namespace webhook
 
-} // namespace cactus
+}  // namespace cactus
