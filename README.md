@@ -1,10 +1,14 @@
 # CACTUS - Webhooks server for Gogs & Github
 
-## Usage
+## Development
 
     ```bash
     git clone https://github.com/saturn-xiv/cactus.git $HOME/workspace/cactus
     cd $HOME/workspace/cactus/
+
+    xmake update
+    xmake repo -u
+
     ./build.sh
     ```
 

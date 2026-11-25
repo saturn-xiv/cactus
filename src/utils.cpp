@@ -4,10 +4,19 @@
 #include <iostream>
 #include <string>
 
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
 #include <cryptopp/filters.h>
 #include <cryptopp/hex.h>
 #include <cryptopp/hmac.h>
 #include <cryptopp/sha.h>
+
+std::string cactus::uuid() {
+  boost::uuids::uuid it = boost::uuids::random_generator()();
+  return boost::uuids::to_string(it);
+}
 
 // https://cryptopp.com/wiki/HMAC
 std::string cactus::hmac::sha256(const std::string& key,
