@@ -1,7 +1,8 @@
 add_rules("mode.debug", "mode.release")
 set_version("2026.11.25", {build = "%a %b %d %I:%M:%S %p %Z %Y"})
 
-add_requires("argparse", "toml++", "spdlog", "cpp-httplib", "cppcodec", "boost", "cryptopp", "cpr", "nlohmann_json", "inja", "mailio")
+add_requires("argparse", "toml++", "spdlog", "cpp-httplib", "cppcodec", "cryptopp", "cpr", "nlohmann_json", "inja", "mailio")
+add_requires("boost", {configs = {asio = true, context = true, process = true}})
 
 target("cactus")
     set_languages("c++23")

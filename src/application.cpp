@@ -6,6 +6,8 @@
 
 #include <stdexcept>
 
+#include <boost/exception/diagnostic_information.hpp>
+
 #include <argparse/argparse.hpp>
 
 inline static std::string api_version() {
@@ -29,14 +31,29 @@ void cactus::Application::http_server(const std::string& config_file,
           cactus::worker::Queue<std::pair<std::string, std::string>>>();
 
   spdlog::info("start consumer thread");
-  std::jthread consumer([&script_queue](std::stop_token stoken) {
+  std::jthread consumer([&script_queue, &config](std::stop_token stoken) {
+    spdlog::debug("load smtp profile");
+    std::filesystem::path working_dir =
+        config["working-dir"].value<std::string>().value_or("/tmp");
+    auto cfg = config["smtp"].as_table();
+    if (cfg == nullptr) {
+      spdlog::error("couldn't found configuration for SMTP");
+    }
+    const cactus::Email email(*cfg);
+    spdlog::debug("consumer loop startup");
     while (auto item = script_queue->pop(stoken)) {
       if (item) {
         const auto& [id, script] = *item;
-        spdlog::info("receive message {}", id);
+        try {
+          cactus::webhook::consume(working_dir, id, email, script);
+        } catch (std::exception& e) {
+          spdlog::error("{}", e.what());
+        } catch (...) {
+          spdlog::error(boost::current_exception_diagnostic_information());
+        }
       }
     }
-    spdlog::info("consumer shutting down cleanly");
+    spdlog::info("consumer {} shutting down cleanly", __PRETTY_FUNCTION__);
   });
 
   auto gogs = config["gogs"].as_table();
@@ -90,6 +107,7 @@ void cactus::Application::http_server(const std::string& config_file,
           spdlog::error("{}", e.what());
           res.set_content(e.what(), cactus::content_types::TEXT_PLAIN_UTF8);
         } catch (...) {
+          spdlog::error(boost::current_exception_diagnostic_information());
           res.set_content("Unknown exception",
                           cactus::content_types::TEXT_PLAIN_UTF8);
         }

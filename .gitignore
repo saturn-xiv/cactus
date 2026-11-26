@@ -1,6 +1,7 @@
 /.vscode/
 /.xmake/
 
+/tmp/
 /build/
 /config.toml
 /*.json

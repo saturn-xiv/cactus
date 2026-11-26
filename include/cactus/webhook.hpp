@@ -9,7 +9,8 @@
 namespace cactus {
 
 namespace webhook {
-void consume(const std::string& id, const std::string& script);
+void consume(const std::filesystem::path& working_dir, const std::string& id,
+             const cactus::Email& email, const std::string& script);
 struct Ok {
   Ok() : created_at(std::chrono::high_resolution_clock::now()) {}
   std::chrono::time_point<std::chrono::high_resolution_clock> created_at;
@@ -25,9 +26,6 @@ class Handler {
   virtual void execute(const std::string& id, const httplib::Request& req) = 0;
 
  protected:
-  void push(const std::string& id, const std::string& script);
-
- private:
   std::shared_ptr<cactus::worker::Queue<std::pair<std::string, std::string>>>
       _queue;
 };
@@ -91,14 +89,16 @@ class Handler : public cactus::webhook::Handler {
 class Job {
  public:
   Job(const toml::table& config);
+  std::pair<std::string, std::string> build(const nlohmann::json& headers,
+                                            const std::string& body) const;
+
   template <typename T>
   std::pair<std::string, std::string> build(const T& headers,
                                             const std::string& body) const {
-    nlohmann::json js = headers;
-    return this->build(js.dump(), body);
+    nlohmann::json it;
+    nlohmann::to_json(it, headers);
+    return this->build(it, body);
   }
-  std::pair<std::string, std::string> build(const nlohmann::json& headers,
-                                            const std::string& body) const;
 
   inline std::string secret() const { return this->_secret; }
 

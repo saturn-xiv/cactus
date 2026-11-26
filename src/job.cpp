@@ -20,7 +20,6 @@ std::pair<std::string, std::string> cactus::webhook::Job::build(
   nlohmann::json data = {{"id", this->_id},
                          {"headers", headers},
                          {"payload", nlohmann::json::parse(body)}};
-
   inja::Environment env;
   const auto script = env.render_file(this->_script, data);
   return {this->_id, script};

@@ -42,14 +42,19 @@ class Queue {
   std::condition_variable_any _variable;
 };
 
+}  // namespace worker
+
 class Email {
  public:
   Email(const toml::table& config);
-  void send(const std::string& to, const std::vector<std::string>& cc,
-            const std::vector<std::string>& bcc, const std::string& subject,
-            const std::string& body) const;
+  void send(const std::string& subject, const std::string& body) const;
 
  private:
+  std::string _host;
+  uint16_t _port;
+  std::string _user;
+  std::string _password;
+  std::vector<std::string> _cc;
+  std::vector<std::string> _bcc;
 };
-}  // namespace worker
 }  // namespace cactus
