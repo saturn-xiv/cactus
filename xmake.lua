@@ -1,7 +1,7 @@
 add_rules("mode.debug", "mode.release")
-set_version("2026.3.25", {build = "%a %b %d %I:%M:%S %p %Z %Y"})
+set_version("2026.11.25", {build = "%a %b %d %I:%M:%S %p %Z %Y"})
 
-add_requires("argparse", "toml++", "spdlog", "cpp-httplib", "cppcodec", "boost_uuid", "cryptopp", "cpr", "nlohmann_json", "inja", "mailio")
+add_requires("argparse", "toml++", "spdlog", "cpp-httplib", "cppcodec", "boost", "cryptopp", "cpr", "nlohmann_json", "inja", "mailio")
 
 target("cactus")
     set_languages("c++23")
@@ -10,5 +10,5 @@ target("cactus")
     set_configdir("$(builddir)/$(plat)/$(arch)/$(mode)")
     add_configfiles("include/cactus/version.h.in", {filename = "include/cactus/version.hpp"})
     add_files("src/*.cpp")
-    add_includedirs("include", "$(builddir)/$(plat)/$(arch)/$(mode)/include")    
-    add_packages("argparse", "toml++", "spdlog", "cpp-httplib", "cppcodec", "boost_uuid", "cryptopp", "cpr", "nlohmann_json", "inja", "mailio")
+    add_includedirs("include", "$(builddir)/$(plat)/$(arch)/$(mode)/include")
+    add_packages("argparse", "toml++", "spdlog", "cpp-httplib", "cppcodec", "boost", "cryptopp", "cpr", "nlohmann_json", "inja", "mailio")

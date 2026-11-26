@@ -24,14 +24,44 @@ void cactus::Application::http_server(const std::string& config_file,
   const toml::table config = toml::parse_file(config_file);
 
   httplib::Server server;
+  std::shared_ptr<cactus::worker::Queue<std::pair<std::string, std::string>>>
+      script_queue = std::make_shared<
+          cactus::worker::Queue<std::pair<std::string, std::string>>>();
+
+  spdlog::info("start consumer thread");
+  std::jthread consumer([&script_queue](std::stop_token stoken) {
+    while (auto item = script_queue->pop(stoken)) {
+      if (item) {
+        const auto& [id, script] = *item;
+        spdlog::info("receive message {}", id);
+      }
+    }
+    spdlog::info("consumer shutting down cleanly");
+  });
 
   auto gogs = config["gogs"].as_table();
-  server.Post("/gogs/:id", [&](const httplib::Request& req,
-                               httplib::Response& res) {
+  server.Post("/api/gogs/webhooks/:id", [&](const httplib::Request& req,
+                                            httplib::Response& res) {
     {
       const auto client_id = req.path_params.at("id");
       spdlog::debug("call webhook gogs.{}", client_id);
-      cactus::webhook::gogs::Handler handler(*gogs);
+      cactus::webhook::gogs::Handler handler(script_queue, *gogs);
+      handler.execute(client_id, req);
+    }
+
+    nlohmann::json body;
+    {
+      cactus::webhook::Ok ok;
+      nlohmann::to_json(body, ok);
+    }
+    res.set_content(body.dump(), cactus::content_types::APPLICATION_JSON_UTF8);
+  });
+  server.Post("/api/github/webhooks/:id", [&](const httplib::Request& req,
+                                              httplib::Response& res) {
+    {
+      const auto client_id = req.path_params.at("id");
+      spdlog::debug("call webhook github.{}", client_id);
+      cactus::webhook::github::Handler handler(script_queue, *gogs);
       handler.execute(client_id, req);
     }
 
